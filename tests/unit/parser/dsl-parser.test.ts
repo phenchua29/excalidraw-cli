@@ -65,6 +65,18 @@ describe('DSL Parser', () => {
       expect(result.nodes[0].label).toBe('email@company.com');
       expect(result.nodes[0].style).toBeUndefined();
     });
+
+    it('should generate Excalidraw arrows for reverse and bidirectional connections', async () => {
+      const graph = parseDSL(`[A] <- [B]
+[C] <-> [D]`);
+      const layouted = await layoutGraph(graph);
+      const file = generateExcalidraw(layouted);
+      const arrows = file.elements.filter((element) => element.type === 'arrow');
+
+      expect(arrows).toHaveLength(2);
+      expect(arrows[0]).toMatchObject({ startArrowhead: 'arrow', endArrowhead: null });
+      expect(arrows[1]).toMatchObject({ startArrowhead: 'arrow', endArrowhead: 'arrow' });
+    });
   });
 
   describe('connection parsing', () => {
@@ -83,46 +95,71 @@ describe('DSL Parser', () => {
 
     it('should parse dashed connections', () => {
       const result = parseDSL('[A] --> [B]');
-      expect(result.edges[0].style?.strokeStyle).toBe('dashed');
-      expect(result.edges[0].style?.startArrowhead).toBeUndefined();
-      expect(result.edges[0].style?.endArrowhead).toBeUndefined();
-      expect(result.edges[0].reversed).toBe(false);
+      expect(result.edges[0].source).toBe(result.nodes[0].id);
+      expect(result.edges[0].target).toBe(result.nodes[1].id);
+      expect(result.edges[0].style).toEqual({ strokeStyle: 'dashed' });
     });
 
     it('should parse dashed reverse connections', () => {
       const result = parseDSL('[A] <-- [B]');
-      expect(result.edges[0].style).toMatchObject({
+      expect(result.edges[0].source).toBe(result.nodes[1].id);
+      expect(result.edges[0].target).toBe(result.nodes[0].id);
+      expect(result.edges[0].style).toEqual({
         strokeStyle: 'dashed',
         startArrowhead: 'arrow',
         endArrowhead: null,
       });
-      expect(result.edges[0].reversed).toBe(true);
     });
 
     it('should parse dashed bidirectional connections', () => {
       const result = parseDSL('[A] <--> [B]');
-      expect(result.edges[0].style).toMatchObject({
+      expect(result.edges[0].source).toBe(result.nodes[0].id);
+      expect(result.edges[0].target).toBe(result.nodes[1].id);
+      expect(result.edges[0].style).toEqual({
         strokeStyle: 'dashed',
         startArrowhead: 'arrow',
         endArrowhead: 'arrow',
       });
-      expect(result.edges[0].reversed).toBe(false);
     });
 
     it('should preserve solid reverse and bidirectional semantics', () => {
       const reverse = parseDSL('[A] <- [B]');
-      expect(reverse.edges[0].style).toMatchObject({
+      expect(reverse.edges[0].source).toBe(reverse.nodes[1].id);
+      expect(reverse.edges[0].target).toBe(reverse.nodes[0].id);
+      expect(reverse.edges[0].style).toEqual({
         startArrowhead: 'arrow',
         endArrowhead: null,
       });
-      expect(reverse.edges[0].reversed).toBe(true);
 
       const bidirectional = parseDSL('[A] <-> [B]');
-      expect(bidirectional.edges[0].style).toMatchObject({
+      expect(bidirectional.edges[0].source).toBe(bidirectional.nodes[0].id);
+      expect(bidirectional.edges[0].target).toBe(bidirectional.nodes[1].id);
+      expect(bidirectional.edges[0].style).toEqual({
         startArrowhead: 'arrow',
         endArrowhead: 'arrow',
       });
-      expect(bidirectional.edges[0].reversed).toBe(false);
+    });
+
+    it('should parse reverse connections as logical right-to-left edges', () => {
+      const result = parseDSL('[A] <- [B]');
+      expect(result.edges).toHaveLength(1);
+      expect(result.edges[0].source).toBe(result.nodes[1].id);
+      expect(result.edges[0].target).toBe(result.nodes[0].id);
+      expect(result.edges[0].style).toEqual({
+        startArrowhead: 'arrow',
+        endArrowhead: null,
+      });
+    });
+
+    it('should parse bidirectional connections with arrowheads on both ends', () => {
+      const result = parseDSL('[A] <-> [B]');
+      expect(result.edges).toHaveLength(1);
+      expect(result.edges[0].source).toBe(result.nodes[0].id);
+      expect(result.edges[0].target).toBe(result.nodes[1].id);
+      expect(result.edges[0].style).toEqual({
+        startArrowhead: 'arrow',
+        endArrowhead: 'arrow',
+      });
     });
 
     it('should parse chains of connections', () => {

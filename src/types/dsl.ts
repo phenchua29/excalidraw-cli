@@ -94,7 +94,6 @@ export interface GraphEdge {
   target: string;
   label?: string;
   style?: EdgeStyle;
-  reversed?: boolean;
 }
 
 /**
