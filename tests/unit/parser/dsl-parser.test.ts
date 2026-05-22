@@ -93,6 +93,43 @@ describe('DSL Parser', () => {
       expect(result.edges[0].label).toBe('yes');
     });
 
+    it('should parse single-quoted labeled connections', () => {
+      const result = parseDSL("[A] -> 'yes' -> [B]");
+      expect(result.edges[0].label).toBe('yes');
+    });
+
+    it('should preserve escaped quotes and backslashes in edge labels', () => {
+      const result = parseDSL(String.raw`[API] -> "say \"hello\" at C:\\temp" -> [Client]`);
+      expect(result.edges[0].label).toBe(String.raw`say "hello" at C:\temp`);
+    });
+
+    it('should preserve apostrophes in single-quoted edge labels', () => {
+      const result = parseDSL(String.raw`[A] -> 'team\'s call' -> [B]`);
+      expect(result.edges[0].label).toBe("team's call");
+    });
+
+    it('should reject malformed labeled edge arrow combinations', () => {
+      expect(() => parseDSL('[A] --> "x" -> [B]')).toThrow(
+        'Invalid labeled edge syntax around "x": expected [A] -> "x" -> [B], got --> "x" ->'
+      );
+      expect(() => parseDSL('[A] -> "x" --> [B]')).toThrow(
+        'Invalid labeled edge syntax around "x": expected [A] -> "x" -> [B], got -> "x" -->'
+      );
+      expect(() => parseDSL('[A] <- "x" [B]')).toThrow(
+        'Invalid labeled edge syntax around "x": expected [A] -> "x" -> [B], got <- "x" <missing arrow>'
+      );
+    });
+
+    it('should reject labeled edges with missing target node', () => {
+      expect(() => parseDSL('[A] -> "x" ->')).toThrow(
+        'Invalid labeled edge syntax around "x": missing target node after label'
+      );
+    });
+
+    it('should reject unterminated edge labels', () => {
+      expect(() => parseDSL('[A] -> "oops -> [B]')).toThrow('Unterminated edge label');
+    });
+
     it('should parse dashed connections', () => {
       const result = parseDSL('[A] --> [B]');
       expect(result.edges[0].source).toBe(result.nodes[0].id);

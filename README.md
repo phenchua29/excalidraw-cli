@@ -95,22 +95,39 @@ excalidraw-cli convert diagram.excalidraw --format svg --no-export-background
 | `->` | Arrow | Forward connection |
 | `<-` | Reverse Arrow | Reverse connection, logically parsed as right-to-left |
 | `<->` | Bidirectional Arrow | Connection with arrowheads on both ends |
-| `-->` | Dashed Arrow | Dashed forward connection |
+| `-->` | Dashed Arrow | Dashed connection |
+| `-> "text" ->` | Labeled Arrow | Connection with a double-quoted label |
+| `-> 'text' ->` | Labeled Arrow | Connection with a single-quoted label |
 | `<--` | Dashed Reverse Arrow | Dashed reversed connection |
 | `<-->` | Dashed Bidirectional Arrow | Dashed connection with arrowheads on both ends |
-| `-> "text" ->` | Labeled Arrow | Connection with label |
 
 ### Example DSL
 
 ```
 (Start) -> [Enter Credentials] -> {Valid?}
 {Valid?} -> "yes" -> [Dashboard] -> (End)
-{Valid?} -> "no" -> [Show Error] -> [Enter Credentials]
+{Valid?} -> 'no' -> [Show Error] -> [Enter Credentials]
+[API] -> "GET /users?name=\"pp\" \\ cache" -> [Client]
 [Client] --> [Webhook]
 [Worker] <-- [Queue]
 [Service A] <--> [Service B]
 [Reviewer] <- [Approved]
 [Client] <-> [API]
+```
+
+### Edge label escaping
+
+Edge labels must use the fully specified form `[A] -> "label" -> [B]` (or single quotes instead of double quotes).
+Mixed forms like `[A] --> "x" -> [B]` are rejected because they are ambiguous.
+
+Shell escaping tips:
+
+```bash
+# easiest: wrap the whole DSL in single quotes, use double-quoted labels inside
+excalidraw-cli create --inline '[API] -> "GET /users?name=\"pp\"" -> [Client]' -o api.excalidraw
+
+# if the label itself needs apostrophes, flip it
+excalidraw-cli create --inline "[Decision] -> 'team\'s call' -> [Next]" -o decision.excalidraw
 ```
 
 ### Node Styling
