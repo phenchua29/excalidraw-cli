@@ -1,0 +1,31 @@
+{
+  "name": "excalidraw-cli",
+  "version": "1.0.0",
+  "description": "Create Excalidraw flowcharts and diagrams from text DSL, JSON, or DOT with auto-layout and PNG/SVG export.",
+  "author": {
+    "name": "swiftlysingh",
+    "url": "https://github.com/swiftlysingh"
+  },
+  "homepage": "https://github.com/swiftlysingh/excalidraw-cli",
+  "repository": "https://github.com/swiftlysingh/excalidraw-cli",
+  "license": "MIT",
+  "keywords": ["excalidraw", "flowchart", "diagram", "dsl", "visualization", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Excalidraw CLI",
+    "shortDescription": "Text-to-Excalidraw flowcharts with auto-layout",
+    "longDescription": "Generate Excalidraw flowcharts from a concise text DSL, JSON, or Graphviz DOT. Includes ELK auto-layout, node styling, image decorations, and PNG/SVG export via MCP tools or the CLI.",
+    "developerName": "swiftlysingh",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/swiftlysingh/excalidraw-cli",
+    "defaultPrompt": [
+      "Create an Excalidraw flowchart for this architecture using excalidraw-cli DSL.",
+      "Turn this process description into a flowchart and export it as PNG.",
+      "Validate this excalidraw DSL and fix any syntax errors."
+    ],
+    "brandColor": "#6965db",
+    "logo": "./assets/up.png"
+  }
+}

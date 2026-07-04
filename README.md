@@ -320,6 +320,47 @@ With the `convert` command, you can also generate:
 - **SVG** — scalable vector graphics, ideal for embedding in docs or web pages
 - **PNG** — raster images at any scale (1×, 2×, 3×, etc.) for presentations or sharing
 
+## Cursor & Codex Plugin
+
+This repository ships a plugin for [Cursor](https://cursor.com/docs/plugins) and [Codex](https://developers.openai.com/codex/plugins/build) that helps agents create diagrams with accurate DSL guidance and MCP tools.
+
+### What's included
+
+- **Skill** (`skills/excalidraw-cli/`) — full DSL reference and workflow for agents
+- **Rules** (`rules/excalidraw-diagrams.mdc`) — diagram conventions when working in this repo
+- **Command** (`commands/create-diagram.md`) — slash command to scaffold a flowchart
+- **MCP server** (`mcp-server/`) — `create_diagram`, `validate_diagram`, and `export_diagram` tools
+
+### Install in Cursor
+
+1. Clone this repository
+2. Build the CLI and MCP server: `npm install && npm run build:all`
+3. In Cursor: **Settings → Plugins → Add Plugin Directory** → select this repo root
+
+The plugin manifest is at `.cursor-plugin/plugin.json`. MCP config is in `mcp.json`.
+
+### Install in Codex
+
+1. Clone this repository and run `npm install && npm run build:all`
+2. Codex discovers the repo-local marketplace at `.agents/plugins/marketplace.json`
+3. Install the **Excalidraw CLI** plugin from that marketplace
+
+The Codex manifest is at `.codex-plugin/plugin.json`. MCP config is in `.mcp.json`.
+
+### MCP tools
+
+| Tool | Description |
+|------|-------------|
+| `create_diagram` | Generate a `.excalidraw` file from DSL, JSON, or DOT |
+| `validate_diagram` | Parse input and return a graph summary without writing output |
+| `export_diagram` | Convert `.excalidraw` to PNG or SVG |
+
+Start the MCP server manually (after building):
+
+```bash
+node mcp-server/dist/index.js
+```
+
 ## License
 
 MIT

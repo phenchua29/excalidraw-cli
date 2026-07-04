@@ -1,0 +1,36 @@
+---
+description: Create Excalidraw flowcharts with excalidraw-cli DSL, JSON, or DOT. Apply when generating diagrams, flowcharts, architecture visuals, or .excalidraw files.
+globs:
+alwaysApply: false
+---
+
+# Excalidraw diagram rules
+
+When creating diagrams for this project, use **excalidraw-cli** rather than hand-drawing Excalidraw JSON.
+
+## Defaults
+
+- Write DSL to a file (e.g. `docs/diagrams/auth-flow.dsl`) instead of `--inline` when labels contain quotes or special characters
+- Use `@direction LR` for architecture/service diagrams; `TB` for sequential user flows
+- Name output files descriptively: `auth-flow.excalidraw`, not `diagram.excalidraw`
+- After creating a diagram, offer PNG export for README/docs embedding
+
+## Shape conventions
+
+- `(Start)` / `(End)` for terminals
+- `[Action]` for process steps and services
+- `{Question?}` for decisions
+- `[[Database]]` for storage
+- Labeled edges: `[A] -> "yes" -> [B]` — never mix arrow styles in one labeled edge
+
+## Quality checks
+
+1. Run `validate_diagram` (MCP) or `excalidraw-cli parse` before finalizing
+2. Keep graphs readable: split diagrams with more than ~12 nodes
+3. Use `@node` blocks for repeated styling instead of copying inline attributes
+
+## Repo-specific notes
+
+- Build before CLI/MCP use: `npm run build && npm run build:mcp`
+- MCP server entry: `node mcp-server/dist/index.js`
+- Programmatic API: `createFlowchartFromDSL`, `createFlowchartFromJSON`, `convertToPNG`, `convertToSVG` from `@swiftlysingh/excalidraw-cli`

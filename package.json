@@ -13,6 +13,9 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build:mcp": "npm run build --prefix mcp-server",
+    "build:all": "npm run build && npm run build:mcp",
+    "postinstall": "npm install --prefix mcp-server --ignore-scripts",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:run": "vitest run",
