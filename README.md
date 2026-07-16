@@ -1,7 +1,7 @@
 # excalidraw-cli
 <p>
   <a href="https://www.npmjs.com/package/@phenchua29/excalidraw-cli"><img src="https://img.shields.io/npm/v/@phenchua29/excalidraw-cli" alt="npm version"></a>
-  <a href="https://github.com/phenchua29/excalidraw-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"></a>
+  <a href="https://github.com/PhenChua29/excalidraw-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"></a>
 </p>
 
 <p align="center">
@@ -32,17 +32,13 @@ Requires `Node >=20.19.0`. Node 18 is no longer supported.
 ### Using npm
 
 ```bash
-npm install -g @swiftlysingh/excalidraw-cli
-
-# or install via Homebrew
-brew tap swiftlysingh/tap
-brew install excalidraw-cli
+npm install -g @phenchua29/excalidraw-cli
 ```
 
 ### From Source (Local Development)
 
 ```bash
-git clone https://github.com/swiftlysingh/excalidraw-cli.git
+git clone https://github.com/PhenChua29/excalidraw-cli.git
 cd excalidraw-cli
 npm install
 npm run build
@@ -259,7 +255,7 @@ import {
   createFlowchartFromJSON,
   convertToSVG,
   convertToPNG,
-} from '@swiftlysingh/excalidraw-cli';
+} from '@phenchua29/excalidraw-cli';
 
 // From DSL
 const dsl = '(Start) -> [Process] -> (End)';
@@ -279,7 +275,7 @@ const json2 = await createFlowchartFromJSON(input);
 ### Export API
 
 ```typescript
-import { convertToSVG, convertToPNG } from '@swiftlysingh/excalidraw-cli';
+import { convertToSVG, convertToPNG } from '@phenchua29/excalidraw-cli';
 import { readFileSync, writeFileSync } from 'fs';
 
 // Load an existing .excalidraw file
