@@ -15,7 +15,7 @@ import { layoutGraph } from './layout/elk-layout.js';
 import { generateExcalidraw, serializeExcalidraw } from './generator/excalidraw-generator.js';
 import { convertImage, swapExtension } from './exporter/index.js';
 import type { ExportOptions } from './exporter/index.js';
-import type { ExcalidrawFile } from './types/excalidraw.js';
+import type { ExcalidrawFile, ExcalidrawFrameElement } from './types/excalidraw.js';
 import type { FlowchartGraph, FlowDirection } from './types/dsl.js';
 
 const program = new Command();
@@ -195,6 +195,10 @@ program
   .option('--padding <n>', 'Padding around content in pixels', '10')
   .option('--scale <n>', 'Scale factor for PNG export', '1')
   .option('--verbose', 'Verbose output')
+  .option(
+    '--frame <name-or-id>',
+    'Export only a specific frame, identified by its name or element ID'
+  )
   .action(async (inputFile, options) => {
     try {
       const format = options.format.toLowerCase();
@@ -234,6 +238,28 @@ program
         padding,
         scale,
       };
+
+      // Resolve --frame option to a concrete ExcalidrawFrameElement
+      if (options.frame) {
+        const query = options.frame as string;
+        const frames = (excalidrawFile.elements as ExcalidrawFrameElement[]).filter(
+          (el) => (el as { type: string }).type === 'frame'
+        );
+        const match = frames.find((el) => el.name === query || el.id === query);
+
+        if (!match) {
+          const available = frames.map((el) => el.name ?? el.id).join(', ');
+          const hint = available ? `Available frames: ${available}` : 'No frames found in this file.';
+          console.error(`Error: Frame "${query}" not found. ${hint}`);
+          process.exit(1);
+        }
+
+        exportOpts.exportingFrame = match;
+
+        if (options.verbose) {
+          console.log(`Exporting frame: "${match.name ?? match.id}" (id=${match.id})`);
+        }
+      }
 
       const outputPath = options.output || swapExtension(inputFile, format);
 

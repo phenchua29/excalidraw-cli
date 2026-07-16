@@ -12,7 +12,7 @@
 import { parse, format } from 'node:path';
 import { JSDOM } from 'jsdom';
 import { withDOMPolyfill, getExcalidrawAssetDir } from './dom-polyfill.js';
-import type { ExcalidrawFile } from '../types/excalidraw.js';
+import type { ExcalidrawFile, ExcalidrawFrameElement } from '../types/excalidraw.js';
 
 /**
  * Export options matching Excalidraw website capabilities
@@ -38,6 +38,12 @@ export interface ExportOptions {
 
   /** Scale factor for PNG export (default: 1). Higher values = higher resolution */
   scale?: number;
+
+  /**
+   * When set, only the content inside this frame is exported.
+   * Passed directly to `@excalidraw/utils` `exportToSvg` as `exportingFrame`.
+   */
+  exportingFrame?: ExcalidrawFrameElement | null;
 }
 
 /**
@@ -51,6 +57,7 @@ export const DEFAULT_EXPORT_OPTIONS: Required<ExportOptions> = {
   exportEmbedScene: false,
   padding: 10,
   scale: 1,
+  exportingFrame: null,
 };
 
 /**
@@ -335,6 +342,7 @@ async function renderSvg(
     appState: Record<string, unknown>;
     files: Record<string, unknown> | null;
     exportPadding?: number;
+    exportingFrame?: unknown;
   }) => Promise<{ outerHTML: string }>;
 
   const appState = {
@@ -350,6 +358,7 @@ async function renderSvg(
     appState: appState as Record<string, unknown>,
     files: (file.files || {}) as Record<string, unknown>,
     exportPadding: opts.padding,
+    exportingFrame: opts.exportingFrame ?? null,
   });
 
   return svg.outerHTML;

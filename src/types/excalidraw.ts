@@ -11,7 +11,8 @@ export type ExcalidrawElementType =
   | 'arrow'
   | 'line'
   | 'freedraw'
-  | 'image';
+  | 'image'
+  | 'frame';
 
 export type ExcalidrawFillStyle = 'solid' | 'hachure' | 'cross-hatch';
 
@@ -154,6 +155,15 @@ export interface ExcalidrawImage extends ExcalidrawElementBase {
 }
 
 /**
+ * Frame element - a named rectangular region that groups elements
+ */
+export interface ExcalidrawFrameElement extends ExcalidrawElementBase {
+  type: 'frame';
+  /** User-visible name shown in the frame header */
+  name: string | null;
+}
+
+/**
  * Union type for all Excalidraw elements
  */
 export type ExcalidrawElement =
@@ -163,7 +173,8 @@ export type ExcalidrawElement =
   | ExcalidrawText
   | ExcalidrawArrow
   | ExcalidrawLine
-  | ExcalidrawImage;
+  | ExcalidrawImage
+  | ExcalidrawFrameElement;
 
 /**
  * File data for embedded images
@@ -194,6 +205,7 @@ export interface ExcalidrawFile {
   type: 'excalidraw';
   version: 2;
   source: string;
+  /** All elements including frames. May contain elements not in ExcalidrawElement union (future types). */
   elements: ExcalidrawElement[];
   appState: ExcalidrawAppState;
   files: Record<string, ExcalidrawFileData>;
