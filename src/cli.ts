@@ -8,6 +8,16 @@
 
 import { Command } from 'commander';
 import { readFileSync, writeFileSync } from 'fs';
+import * as canvasModule from 'canvas';
+import Module from 'module';
+
+// Patch Node's module resolution so that jsdom can require('canvas')
+// successfully even when isolated by package managers like pnpm.
+const originalRequire = Module.prototype.require;
+(Module.prototype as any).require = function(id: string) {
+  if (id === 'canvas') return canvasModule;
+  return originalRequire.call(this, id);
+};
 import { parseDSL } from './parser/dsl-parser.js';
 import { parseJSONString } from './parser/json-parser.js';
 import { parseDOT } from './parser/dot-parser.js';
