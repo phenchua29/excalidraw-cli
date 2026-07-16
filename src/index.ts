@@ -4,6 +4,8 @@
  * Create Excalidraw flowcharts programmatically.
  */
 
+import './patch-canvas.js';
+
 // Type exports
 export type {
   FlowchartGraph,
