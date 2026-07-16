@@ -1,7 +1,7 @@
 # excalidraw-cli
 <p>
-  <a href="https://www.npmjs.com/package/@swiftlysingh/excalidraw-cli"><img src="https://img.shields.io/npm/v/@swiftlysingh/excalidraw-cli" alt="npm version"></a>
-  <a href="https://github.com/swiftlysingh/excalidraw-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"></a>
+  <a href="https://www.npmjs.com/package/@phenchua29/excalidraw-cli"><img src="https://img.shields.io/npm/v/@phenchua29/excalidraw-cli" alt="npm version"></a>
+  <a href="https://github.com/phenchua29/excalidraw-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"></a>
 </p>
 
 <p align="center">
