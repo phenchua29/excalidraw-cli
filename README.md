@@ -21,6 +21,7 @@
 - **Auto-layout** using ELK.js (Eclipse Layout Kernel)
 - **Multiple flow directions**: TB (top-bottom), BT, LR, RL
 - **Export to PNG & SVG** with dark mode, custom backgrounds, scale, and padding
+- **Export specific frames** from within an Excalidraw file
 - **Programmable API** for integration into other tools
 
 
@@ -81,6 +82,9 @@ excalidraw-cli convert diagram.excalidraw --format png --scale 2 --dark
 
 # Convert to SVG without background
 excalidraw-cli convert diagram.excalidraw --format svg --no-export-background
+
+# Export only a specific frame (by name or ID)
+excalidraw-cli convert diagram.excalidraw --format png --frame "My Frame"
 ```
 
 ### DSL Syntax
@@ -210,6 +214,7 @@ excalidraw-cli convert <input> [options]
 - `--embed-scene` - Embed scene data in exported image
 - `--padding <n>` - Padding around content in pixels (default: 10)
 - `--scale <n>` - Scale factor for PNG export (default: 1)
+- `--frame <name-or-id>` - Export only a specific frame, identified by its name or element ID
 - `--verbose` - Verbose output
 
 #### `parse`
