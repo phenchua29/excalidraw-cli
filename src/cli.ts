@@ -23,7 +23,7 @@ const program = new Command();
 program
   .name('excalidraw-cli')
   .description('Create Excalidraw flowcharts from DSL, JSON, or DOT')
-  .version('1.2.0');
+  .version('1.3.4');
 
 /**
  * Create command - main flowchart creation
